@@ -46,35 +46,35 @@
 1. 可以使用NeRF训练中处理好的数据your_object/文件夹中包含images/、sparse/0/{cameras.txt,images.txt,points3D.txt}即可
 2. 也可以安装colmap配备path后命令行执行
    ```sh
-colmap feature_extractor --database_path database.db --image_path ./images
-colmap exhaustive_matcher --database_path database.db
-colmap mapper --database_path database.db --image_path ./images --output_path ./sparse
-colmap image_undistorter --image_path ./images --input_path ./sparse/0 --output_path ./colmap_undistorted --output_type COLMAP
+   colmap feature_extractor --database_path database.db --image_path ./images
+   colmap exhaustive_matcher --database_path database.db
+   colmap mapper --database_path database.db --image_path ./images --output_path ./sparse
+   colmap image_undistorter --image_path ./images --input_path ./sparse/0 --output_path ./colmap_undistorted --output_type COLMAP
    ```
 
 ### 训练
 环境配置：
    ```sh
-git clone https://github.com/apchenstu/TensoRF.git
-cd TensoRF
-conda create -n TensoRF python=3.8
-conda activate TensoRF
-pip install torch torchvision
-pip install tqdm scikit-image opencv-python configargparse lpips imageio-ffmpeg kornia tensorboard
+   git clone https://github.com/apchenstu/TensoRF.git
+   cd TensoRF
+   conda create -n TensoRF python=3.8
+   conda activate TensoRF
+   pip install torch torchvision
+   pip install tqdm scikit-image opencv-python configargparse lpips imageio-ffmpeg kornia tensorboard
    ```
 生成 COLMAP → NeRF 格式
    ```sh
-python dataLoader/colmap2nerf.py --colmap_matcher exhaustive --run_colmap --aabb_scale 4
+   python dataLoader/colmap2nerf.py --colmap_matcher exhaustive --run_colmap --aabb_scale 4
    ```
 
 类似NeRF创建配置文件，进行训练
 
    ```sh
-python train.py --config configs/your_object.txt --expname your_object_TensoRF --basedir ./logs
+   python train.py --config configs/your_object.txt --expname your_object_TensoRF --basedir ./logs
    ```
 有相机轨迹json文件可渲染
    ```sh
-python train.py --config configs/your_object.txt --ckpt ./logs/your_object_TensoRF/ckpt/latest.pth --render_only 1 --render_path 1
+   python train.py --config configs/your_object.txt --ckpt ./logs/your_object_TensoRF/ckpt/latest.pth --render_only 1 --render_path 1
    ```
 
 ## 3DGS
@@ -83,29 +83,29 @@ python train.py --config configs/your_object.txt --ckpt ./logs/your_object_Tenso
 
 环境配置：
    ```sh
-# 克隆仓库（包含子模块）
-git clone https://github.com/graphdeco-inria/gaussian-splatting --recursive
-cd gaussian-splatting
+   # 克隆仓库（包含子模块）
+   git clone https://github.com/graphdeco-inria/gaussian-splatting --recursive
+   cd gaussian-splatting
 
-# 创建 Conda 环境
-conda env create -f environment.yml
-conda activate gaussian_splatting
+   # 创建 Conda 环境
+   conda env create -f environment.yml
+   conda activate gaussian_splatting
    ```
-# 生成 SfM 数据
+### 生成 SfM 数据
    ```sh
-python convert.py -s <location> --resize
+   python convert.py -s <location> --resize
    ```
 
-# 训练
+### 训练
    ```sh
-python train.py -s <location>  --model_path <output_dir> 
+   python train.py -s <location>  --model_path <output_dir> 
    ```
 基本使用默认值即可，NeRF Synthetic 数据集可选white_background = True
 
 模型保存：在 --save_iterations 指定的迭代保存 .ply 模型
 
-# 渲染
+### 渲染
    ```sh
-python render.py -m <output_dir>  
-python metrics.py -m <output_dir> 
+   python render.py -m <output_dir>  
+   python metrics.py -m <output_dir> 
    ```
